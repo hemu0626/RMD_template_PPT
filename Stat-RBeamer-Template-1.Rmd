@@ -1,0 +1,325 @@
+---
+title: "Rmarkdown/Beamer Slides"
+subtitle: Heterogenity modeling through frailty and copulas
+institute: Xi'an Jiaotong-Liverpool University
+author: "Dr. Mu He"
+date: '`r Sys.Date()`'
+fontsize: 12pt
+output: 
+  beamer_presentation:
+    latex_engine: xelatex
+    keep_tex: true
+    slide_level: 3
+    highlight: tango
+    theme: "CambridgeUS"
+    colortheme: "dolphin"
+    fonttheme: "professionalfonts"
+    incremental: FALSE
+    toc: False
+    fig_width: 4.5
+    fig_height: 3.5
+    includes:
+      in_header: ./beamersetup/header-1.tex
+#      before_body: ./beamersetup/prefix.tex
+      after_body: ./beamersetup/suffix.tex
+classoption: "aspectratio=169, 12pt,table,t,utf-8"      
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.path = 'figures/',
+                      echo = FALSE, 
+                      warning = FALSE, 
+                      message = FALSE, 
+                      fig.align = "center",
+                      fig.pos = "h")
+```
+
+```{r, eval=FALSE}
+选项说明：slide_level: 3
+
+1. Section title 
+# 节标题
+2. Subsection title
+## 子节标题
+3. Frame title
+### 幻灯片标题
+4. Block title 
+#### 块标题
+```
+
+### 选项说明：`slide_level: 3`
+
+```
+1. Section title 
+# 节标题
+
+2. Subsection title
+## 子节标题
+
+3. Frame title
+### 幻灯片标题
+
+4. Block title 
+#### 块标题
+```
+
+### 报告提纲
+\tableofcontents 
+
+
+
+# 学术幻灯片制作
+
+## 相关介绍
+
+### 强大的Markdown+R+Beamer
+
+* Beamer
+
+      Beamer是 LaTeX 上用来制作演示文档的一个套件。
+
+* markdown
+  
+      Markdown是一种轻量级的标记性语言。
+      
+* knitr + pandoc
+
+      实现文档转换, knitr支持多种语言引擎，包括R, Python
+      
+#### knitr + pandoc
+  
+R Markdown + Beamer $\underset{\text{pandoc}}{\overset{\text{knitr}}{\Longrightarrow}}$ Perfect Academic Presentation!
+
+### 原理
+* knitr+ pandoc
+
+
+```{r, fig.height=2, fig.cap="Knitr workflow",out.width = "65%"}
+knitr::include_graphics("./figures/knitr-workflow.png")
+```
+
+
+<!-- Frame  -->
+### 基本要求
+<!-- 列表  -->
+- 环境安装
+    - R
+    - knitr
+    - Rstudio
+    - \TeX{}Live (C\TeX{}套装, mactex)
+
+- 预备知识:
+    - Mardown/Rmarkdown基础
+    - \LaTeX{}基础
+    - Beamer基础
+    - R基础
+    
+
+### 一张幻灯片的式样
+
+```
+# 一级标题为对应TeX的section
+
+## 二级标题为对应TeX的subsection
+
+### 三级标题为Beamer幻灯片的标题，对应TeX的\frametitle{}
+
+#### 四级标题为Beamer中块(block)标题
+
+*Hello, R Markdown!*
+```
+
+### 等价于Beamer中代码
+
+```
+\section{一级标题section}
+\subsection{二级标题subsection}
+\frame{
+\frametitle{幻灯片的标题}
+\begin{block}{Block标题}
+\textit{Hello, R Markdown!}
+\end{Block}
+}
+```
+
+### 正文中下面的命令(环境)就不能/不必用了
+
+- section
+- subsection
+- frame
+- 列表类环境: 
+    - enumerate
+    - itemize
+    - list
+    - description
+
+# Beamer幻灯片的主要构成 
+
+## 常用要素设定
+### 字体与颜色设定
+
+- 用Markdown设定
+```
+    **这是粗体**
+```    
+**这是粗体**,*这是斜体*
+
+- 用\TeX{}的命令
+
+```{}
+  \textbf{这是黑体},\textcolor{red}{\bf 这是红色黑体}
+```
+  \textbf{这是黑体},\textcolor{red}{\bf 这是红色黑体}
+
+### 有序列表设定
+
+#### 有序列表(代码)
+```{}
+1.  one
+2.  two
+3.  three
+```
+#### 有序列表(结果)
+1.  one
+2.  two
+3.  three
+
+### 无序列表设定
+
+#### 无序列表(代码)
+```{}
+* fruits
+    + apples
+        - macintosh
+        - red delicious
+    + pears
+```
+#### 无序列表(结果)
+* fruits
+    + apples
+        - macintosh
+        - red delicious
+    + pears
+
+
+## R代码与分析结果输出
+### 统计量输出
+```{r cars, echo = TRUE, comment=""}
+summary(cars)
+```
+
+### 图形输出
+```{r pressure, echo = TRUE, fig.cap="Pressure",fig.align='center', out.width='0.55\\linewidth'}
+plot(pressure)
+```
+
+### 表格输出: 使用kable
+
+#### R代码
+
+```{r Kable, echo = TRUE, warning=FALSE, results='asis'}
+n <- 100; x <- rnorm(n)
+y <- 2*x + rnorm(n)
+out <- lm(y ~ x)
+library(knitr)
+kable(caption = "kable", summary(out)$coef, digits=2)
+```
+
+### 表格输出: 使用xtable
+
+
+#### R代码
+
+```{r xtable1, eval=FALSE, echo = TRUE}
+n <- 100
+x <- rnorm(n)
+y <- 2*x + rnorm(n)
+out <- lm(y ~ x)
+library(xtable)
+lmcoef<- xtable(summary(out)$coef, 
+                digits=c(0, 2, 2, 1, 2))
+print(lmcoef)
+```
+
+
+### 表格输出: 使用xtable
+
+
+#### 自动转化为\TeX{}代码
+
+\small
+```{r xtable2, echo = FALSE, comment=""}
+n <- 100
+x <- rnorm(n)
+y <- 2*x + rnorm(n)
+out <- lm(y ~ x)
+library(xtable)
+lmcoef<- xtable(caption = "xtable", summary(out)$coef, 
+                digits=c(0, 2, 2, 1, 2))
+print(lmcoef, comment = FALSE)
+```
+
+### 输出表格 
+
+#### 例(续)
+\small
+```{r xtable3, echo = TRUE,results='asis'}
+print(lmcoef,caption.placement="top",comment=FALSE)
+```
+
+### 数学公式
+
+- 行内公式 `$x^2+y^2=1$` 或 `\(x^2+y^2=1\)`:
+\(x^2+y^2=1\).
+
+- 独立行公式:
+```
+$$
+\oint_C x^3\, dx + 4y^2\, dy
+$$
+```
+$$
+\oint_C x^3\, dx + 4y^2\, dy
+$$
+
+
+
+### 双栏排版
+
+:::::: {.columns}
+::: {.column width="35%"}
+
+```{r Kable-1, echo = TRUE, eval=FALSE, warning=FALSE, results='asis', class.source="bg-success"}
+  n <- 100; x <- rnorm(n)
+  y <- 2*x + rnorm(n)
+  out <- lm(y ~ x)
+  library(knitr)
+  kable(caption = "kable", 
+        summary(out)$coef, 
+        digits=2)
+```
+
+:::
+::: {.column width="5%"}
+\ 
+<!-- an empty Div (with a white space), serving as
+a column separator -->
+:::
+::: {.column width="65%"}
+
+```{r Kable-2, eval=TRUE, echo = FALSE, warning=FALSE, results='asis', class.output="bg-warning"}
+n <- 100; x <- rnorm(n)
+y <- 2*x + rnorm(n)
+out <- lm(y ~ x)
+library(knitr)
+kable(caption = "kable", summary(out)$coef, digits=2)
+```
+:::
+::::::
+
+- 对于纯文字及图表还使用\TeX{}的
+
+  - minipage环境
+  
+  - columns环境 
+
